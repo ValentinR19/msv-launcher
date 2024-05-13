@@ -1,0 +1,88 @@
+version: "3.1"
+
+services:
+  nats_server:
+    image: nats:latest
+    ports:
+      - 8222:8222
+      
+  client-gateway:
+    build: ./client-gateway
+    ports:
+      - ${CLIENT_GATEWAY_PORT}:3000
+    volumes:
+      - ./client-gateway/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3000
+      - NATS_SERVERS=${NATS_SERVER}
+  
+  orders-msv:
+    depends_on:
+      - orders-db
+    build: ./orders-msv
+    ports:
+      - ${ORDERS_MSV_PORT}:3002
+    volumes:
+      - ./orders-msv/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3002
+      - NATS_SERVERS=${NATS_SERVER}
+      - DB_NAME=ordersdb
+      - DB_HOST=orders-db
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=root
+      - DB_LOGGING=query,error
+      - DB_LOGGING_ENABLED=true
+      
+  orders-db:
+    container_name: orders_database
+    image: postgres:16.2
+    restart: always
+    volumes:
+      - ./orders-msv/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=ordersdb
+    ports:
+      - ${POSTGRES_PORT}:5432
+
+  products-msv:
+    depends_on:
+      - mysql-database
+    build: ./products-msv
+    ports:
+      - ${PRODUCTS_MSV_PORT}:3001
+    volumes:
+      - ./products-msv/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3001
+      - NATS_SERVERS=${NATS_SERVER}
+      - DB_NAME=productsdb
+      - DB_HOST=mysql-database
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - DB_LOGGING=query,error
+      - DB_LOGGING_ENABLED=true
+
+  mysql-database:
+    container_name: mysql_db
+    image: mysql:8
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=root
+    ports:
+      - ${MYSQL_PORT}:3306
+    volumes: 
+      - ./products-msv/init.sql:/docker-entrypoint-initdb.d/init.sql
+    
+
+
+
+  
