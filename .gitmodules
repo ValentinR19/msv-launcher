@@ -1,9 +1,9 @@
 [submodule "client-gateway"]
 	path = client-gateway
-	url = https://valentinr19@bitbucket.org/curso-msv/client-gateway.git
+	url = https://github.com/ValentinR19/client-gateway.git
 [submodule "products-msv"]
 	path = products-msv
-	url = https://valentinr19@bitbucket.org/curso-msv/products-msv.git
+	url = https://github.com/ValentinR19/products-msv.git
 [submodule "orders-msv"]
 	path = orders-msv
-	url = https://valentinr19@bitbucket.org/curso-msv/orders-msv.git
+	url = https://github.com/ValentinR19/orders-msv.git
