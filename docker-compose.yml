@@ -5,7 +5,7 @@ services:
     image: nats:latest
     ports:
       - 8222:8222
-      
+
   client-gateway:
     build: ./client-gateway
     ports:
@@ -16,7 +16,7 @@ services:
     environment:
       - PORT=3000
       - NATS_SERVERS=${NATS_SERVER}
-  
+
   orders-msv:
     depends_on:
       - orders-db
@@ -36,7 +36,7 @@ services:
       - DB_PASSWORD=root
       - DB_LOGGING=query,error
       - DB_LOGGING_ENABLED=true
-      
+
   orders-db:
     container_name: orders_database
     image: postgres:16.2
@@ -79,6 +79,20 @@ services:
       - MYSQL_PASSWORD=root
     ports:
       - ${MYSQL_PORT}:3306
-    volumes: 
+    volumes:
       - ./products-msv/init.sql:/docker-entrypoint-initdb.d/init.sql
-    
+
+  payments-msv:
+    build: ./payments-msv
+    ports:
+      - 3003:3003
+    volumes:
+      - ./payments-msv/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3003
+      - STRIPE_SECRET=${PAYMENTS_MSV_STRIPE_SECRET}
+      - STRIPE_ENDPOINT_SECRET=${PAYMENTS_MSV_STRIPE_ENDPOINT_SECRET}
+      - STRIPE_SUCCESS_URL=${PAYMENTS_MSV_STRIPE_SUCCESS_URL}
+      - STRIPE_CANCEL_URL=${PAYMENTS_MSV_STRIPE_CANCEL_URL}
+      - NATS_SERVERS=${NATS_SERVER}
