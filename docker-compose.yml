@@ -96,3 +96,11 @@ services:
       - STRIPE_SUCCESS_URL=${PAYMENTS_MSV_STRIPE_SUCCESS_URL}
       - STRIPE_CANCEL_URL=${PAYMENTS_MSV_STRIPE_CANCEL_URL}
       - NATS_SERVERS=${NATS_SERVER}
+
+  auth-msv:
+    build: ./auth-msv
+    volumes:
+      - ./auth-msv/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - NATS_SERVERS=${NATS_SERVER}
