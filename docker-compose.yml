@@ -105,3 +105,4 @@ services:
     environment:
       - NATS_SERVERS=${NATS_SERVER}
       - DATABASE_URL=${AUTH_DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
