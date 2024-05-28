@@ -1,0 +1,109 @@
+version: "3.1"
+
+services:
+  # =========================
+  # Nats Server
+  # =========================
+  nats_server:
+    image: nats:latest
+    ports:
+      - 8222:8222
+
+  # =========================
+  # Client Gateway
+  # =========================
+  client-gateway:
+    image: client-gateway-prod
+    build:
+      context: ./client-gateway
+      dockerfile: dockerfile.prod
+    ports:
+      - ${CLIENT_GATEWAY_PORT}:${CLIENT_GATEWAY_PORT}
+    environment:
+      - PORT=${CLIENT_GATEWAY_PORT}
+      - NATS_SERVERS=${NATS_SERVER}
+
+  # =========================
+  # Auth Microservice
+  # =========================
+  auth-msv:
+    image: auth-msv-prod
+    build:
+      context: ./auth-msv
+      dockerfile: dockerfile.prod
+    environment:
+      - NATS_SERVERS=${NATS_SERVER}
+      - DATABASE_URL=${AUTH_DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+
+  # =========================
+  # Payments Microservice
+  # =========================
+
+  payments-msv:
+    image: payments-msv-prod
+    build:
+      context: ./payments-msv
+      dockerfile: dockerfile.prod
+    environment:
+      - PORT=3003
+      - STRIPE_SECRET=${PAYMENTS_MSV_STRIPE_SECRET}
+      - STRIPE_ENDPOINT_SECRET=${PAYMENTS_MSV_STRIPE_ENDPOINT_SECRET}
+      - STRIPE_SUCCESS_URL=${PAYMENTS_MSV_STRIPE_SUCCESS_URL}
+      - STRIPE_CANCEL_URL=${PAYMENTS_MSV_STRIPE_CANCEL_URL}
+      - NATS_SERVERS=${NATS_SERVER}
+
+  # =========================
+  # Orders Microservice
+  # =========================
+
+  orders-msv:
+    image: orders-msv-prod
+    build:
+      context: ./orders-msv
+      dockerfile: dockerfile.prod
+    environment:
+      - PORT=3002
+      - NATS_SERVERS=${NATS_SERVER}
+      - DB_URL=${ORDERS_DATABASE_URL}
+      - DB_NAME=${ORDERS_DB_NAME}
+      - DB_HOST=${ORDERS_DB_HOST}
+      - DB_PORT=${ORDERS_DB_PORT}
+      - DB_USERNAME=${ORDERS_DB_USERNAME}
+      - DB_PASSWORD=${ORDERS_DB_PASSWORD}
+      - DB_LOGGING=query,error
+      - DB_LOGGING_ENABLED=true
+
+  # =========================
+  # Products Microservice
+  # =========================
+
+  # products-msv:
+  #   image: products-msv-prod
+  #   depends_on:
+  #     - mysql-database
+  #   build:
+  #     context: ./products-msv
+  #     dockerfile: dockerfile.prod
+  #   environment:
+  #     - PORT=3001
+  #     - NATS_SERVERS=${NATS_SERVER}
+  #     - DB_NAME=productsdb
+  #     - DB_HOST=mysql-database
+  #     - DB_PORT=3306
+  #     - DB_USERNAME=root
+  #     - DB_PASSWORD=root
+  #     - DB_LOGGING=query,error
+  #     - DB_LOGGING_ENABLED=true
+
+  # mysql-database:
+  #   container_name: mysql_db
+  #   image: mysql:8
+  #   restart: always
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=root
+  #     - MYSQL_PASSWORD=root
+  #   ports:
+  #     - ${MYSQL_PORT}:3306
+  #   volumes:
+  #     - ./products-msv/init.sql:/docker-entrypoint-initdb.d/init.sql
