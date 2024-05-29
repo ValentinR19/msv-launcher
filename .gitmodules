@@ -7,3 +7,12 @@
 [submodule "orders-msv"]
 	path = orders-msv
 	url = https://github.com/ValentinR19/orders-msv.git
+[submodule "client-gateway-msv"]
+	path = client-gateway-msv
+	url = https://github.com/ValentinR19/client-gateway.git
+[submodule "payments-msv"]
+	path = payments-msv
+	url = https://github.com/ValentinR19/payments-msv.git
+[submodule "auth-msv"]
+	path = auth-msv
+	url = https://github.com/ValentinR19/auth-msv.git
