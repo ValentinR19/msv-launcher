@@ -13,7 +13,7 @@ services:
   # Client Gateway
   # =========================
   client-gateway:
-    image: client-gateway-prod
+    image: southamerica-west1-docker.pkg.dev/microservices-424800/image-registry/client-gateway
     build:
       context: ./client-gateway
       dockerfile: dockerfile.prod
@@ -27,7 +27,7 @@ services:
   # Auth Microservice
   # =========================
   auth-msv:
-    image: auth-msv-prod
+    image: southamerica-west1-docker.pkg.dev/microservices-424800/image-registry/auth-msv
     build:
       context: ./auth-msv
       dockerfile: dockerfile.prod
@@ -41,7 +41,7 @@ services:
   # =========================
 
   payments-msv:
-    image: payments-msv-prod
+    image: southamerica-west1-docker.pkg.dev/microservices-424800/image-registry/payments-msv
     build:
       context: ./payments-msv
       dockerfile: dockerfile.prod
@@ -58,7 +58,7 @@ services:
   # =========================
 
   orders-msv:
-    image: orders-msv-prod
+    image: southamerica-west1-docker.pkg.dev/microservices-424800/image-registry/orders-msv
     build:
       context: ./orders-msv
       dockerfile: dockerfile.prod
@@ -81,7 +81,7 @@ services:
   # =========================
 
   products-msv:
-    image: products-msv-prod
+    image: southamerica-west1-docker.pkg.dev/microservices-424800/image-registry/products-msv
     build:
       context: ./products-msv
       dockerfile: dockerfile.prod
@@ -95,15 +95,3 @@ services:
       - DB_PASSWORD=${PRODUCTS_DB_PASSWORD_PROD}
       - DB_LOGGING=query,error
       - DB_LOGGING_ENABLED=${PRODUCTS_DB_LOGGING_ENABLED_PROD}
-
-  # mysql-database:
-  #   container_name: mysql_db
-  #   image: mysql:8
-  #   restart: always
-  #   environment:
-  #     - MYSQL_ROOT_PASSWORD=root
-  #     - MYSQL_PASSWORD=root
-  #   ports:
-  #     - ${MYSQL_PORT}:3306
-  #   volumes:
-  #     - ./products-msv/init.sql:/docker-entrypoint-initdb.d/init.sql
