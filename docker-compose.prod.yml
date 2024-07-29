@@ -15,7 +15,7 @@ services:
   client-gateway:
     image: southamerica-west1-docker.pkg.dev/microservices-424800/image-registry/client-gateway
     build:
-      context: ./client-gateway
+      context: ./client-gateway-msv
       dockerfile: dockerfile.prod
     ports:
       - ${CLIENT_GATEWAY_PORT}:${CLIENT_GATEWAY_PORT}
