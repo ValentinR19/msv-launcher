@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: products-msv
+  name: products-msv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: products-msv
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: products-msv
+    spec:
+      containers:
+        - image: southamerica-west1-docker.pkg.dev/microservices-424800/image-registry/products-msv
+          name: products-msv
+          env:
+            - name: PORT
+              value: "3001"
+            - name: NATS_SERVERS
+              value: "nats://nats"
+            - name: DB_NAME
+              value: "railway"
+            - name: DB_HOST
+              value: "monorail.proxy.rlwy.net"
+            - name: DB_PORT
+              value: "34762"
+            - name: DB_USERNAME
+              value: "root"
+            - name: DB_PASSWORD
+              value: "HhOTLxaEsZEfWCrwAifLRgHnrCHmqMNn"
+            - name: DB_LOGGING
+              value: "query,error"
+            - name: DB_LOGGING_ENABLED
+              value: "false"
+
+          resources: {}
+status: {}
