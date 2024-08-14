@@ -25,20 +25,12 @@ spec:
               value: "3001"
             - name: NATS_SERVERS
               value: "nats://nats"
-            - name: DB_NAME
-              value: "railway"
-            - name: DB_HOST
-              value: "monorail.proxy.rlwy.net"
-            - name: DB_PORT
-              value: "34762"
-            - name: DB_USERNAME
-              value: "root"
-            - name: DB_PASSWORD
-              value: "HhOTLxaEsZEfWCrwAifLRgHnrCHmqMNn"
             - name: DB_LOGGING
               value: "query,error"
             - name: DB_LOGGING_ENABLED
               value: "false"
+            - name: DB_URL
+              value: "postgresql://productsdb_owner:8TCM6weoWbKy@ep-billowing-mode-a5rj0t9l.us-east-2.aws.neon.tech/productsdb?sslmode=require"
 
           resources: {}
 status: {}

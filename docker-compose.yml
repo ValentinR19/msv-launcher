@@ -62,13 +62,9 @@ services:
     environment:
       - PORT=3001
       - NATS_SERVERS=${NATS_SERVER}
-      - DB_NAME=productsdb
-      - DB_HOST=mysql-database
-      - DB_PORT=3306
-      - DB_USERNAME=root
-      - DB_PASSWORD=root
       - DB_LOGGING=query,error
       - DB_LOGGING_ENABLED=true
+      - DB_URL=${PRODUCTS_DB_URL_PROD}
 
   mysql-database:
     container_name: mysql_db

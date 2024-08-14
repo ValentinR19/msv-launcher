@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: orders-msv
+  name: orders-msv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders-msv
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: orders-msv
+    spec:
+      containers:
+        - image: southamerica-west1-docker.pkg.dev/microservices-424800/image-registry/orders-msv
+          name: orders-msv
+          env:
+            - name: PORT
+              value: "3001"
+            - name: NATS_SERVERS
+              value: "nats://nats"
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: orders-secrets
+                  key: database_url
+            - name: DB_NAME
+              value: "ordersdb"
+            - name: DB_HOST
+              value: "ep-late-butterfly-a5o1evit.us-east-2.aws.neon.tech"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USERNAME
+              value: "ordersdb_owner"
+            - name: DB_PASSWORD
+              value: "ph1MEsq9LtHI"
+            - name: DB_LOGGING
+              value: "query,error"
+            - name: DB_LOGGING_ENABLED
+              value: "true"
+
+          resources: {}
+status: {}
